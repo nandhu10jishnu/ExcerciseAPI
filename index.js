@@ -27,8 +27,10 @@ app.listen(port, () => {
 const exercisesRouter = require('./routes/exercises');
 const usersRouter = require('./routes/users');
 const designationRouter = require('./routes/designation');
+const countryRouter = require('./routes/country');
 
 
 app.use('/api/exercises', exercisesRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/designation', designationRouter);
+app.use('/api/country',countryRouter);
