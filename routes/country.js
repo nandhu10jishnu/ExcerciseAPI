@@ -1,13 +1,14 @@
 const router = require('express').Router();
 let Country = require('../models/country.model');
+let jwtauth = require('../token/jwt');                     // jwt
 
-router.route('/').get((req, res) => {
+router.route('/').get(jwtauth.authenticate,(req, res) => {               //jwt
     Country.find()
       .then(country => res.json(country))
       .catch(err => res.status(400).json('Error: ' + err));
   });
   
-  router.route('/add').post((req, res) => {
+  router.route('/add').post(jwtauth.authenticate,(req, res) => {
     const Name = req.body.Name;
     const Description = req.body.Description;
   
@@ -20,19 +21,19 @@ router.route('/').get((req, res) => {
   .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/:id').get((req, res) => {
+router.route('/:id').get(jwtauth.authenticate,(req, res) => {
     Country.findById(req.params.id)
       .then(country => res.json(country))
       .catch(err => res.status(400).json('Error: ' + err));
   });
 
-  router.route('/:id').delete((req, res) => {
+  router.route('/:id').delete(jwtauth.authenticate,(req, res) => {
     Country.findByIdAndDelete(req.params.id)
       .then(() => res.json('Country deleted.'))
       .catch(err => res.status(400).json('Error: ' + err));
   });
 
-  router.route('/update/:id').put((req, res) => {
+  router.route('/update/:id').put(jwtauth.authenticate,(req, res) => {
     Country.findById(req.params.id)
       .then(country => {
         country.Name = req.body.Name;
