@@ -1,11 +1,20 @@
 const router = require('express').Router();
 let Designation = require('../models/designation');
+let jwtauth = require('../token/jwt');
 
-router.route('/').get((req, res) => {
+
+router.route('/').get(jwtauth.authenticate, (req, res) => {
   Designation.find()
-    .then(designation => res.json(designation))
-    .catch(err => res.status(400).json('Error: ' + err));
+      .then(designation => {
+          if (designation.length === 0) {
+              return res.status(404).json({ message: 'No designation found.' });
+          }
+          res.json(designation);
+      })
+      .catch(err => res.status(500).json({ error: 'Error fetching designation list.', details: err.message }));
 });
+
+
     
 router.route('/add').post((req, res) => {
   const Name = req.body.Name;
